@@ -287,15 +287,17 @@ class EntryEdit(QAbstractItemView):
         personName = record.field("first_name").value() + " " + record.field("last_name").value()
 
         kmlFileName = personName + '.kml'
-        nameAndPosition = personName + ' - Fellow, Researcher'
-        descriptionText = "Bunch of <b>description text</b>"
-        coordsStr = '-122.1226561806599,47.67504299735445,0'
-        longitude = '-122.1222145437816'
-        latitude = '47.67511545561167'
-        altitude = '0'
-        heading = '0.0005234466212885948'
-        tilt = '0'
-        xrange = '247.266752558574'
+        nameAndPosition = personName + ' - ' + record.field("position").value()
+        descriptionText = record.field("bio").value() # TODO: should form this from other fields
+        longitude = record.field("longitude").value()  #'-122.1222145437816'
+        latitude = record.field("latitude").value() #'47.67511545561167'
+        altitude = '0'                     #TODO: what is this?
+        coordsStr = longitude + ',' + latitude
+        heading = '0.0005234466212885948'  #TODO: what is this?
+        tilt = '0'                         #TODO: what is this?
+        xrange = '247.266752558574'        #TODO: what is this?
+        gender = "man" if record.field("gender").value() == 1 else "woman"
+        gender_color = 'ff00aa00' if record.field("gender").value() == 1 else "ffffaa00"
 
 
         documentElement = kmlDoc.createElement('Document')
@@ -306,12 +308,12 @@ class EntryEdit(QAbstractItemView):
         documentElement.appendChild(nameElement)
 
         styleElement = kmlDoc.createElement('Style')
-        styleElement.setAttribute('id', 'sn_woman')
+        styleElement.setAttribute('id', 'sn_' + gender)
         documentElement.appendChild(styleElement)
         iconStyleElement = kmlDoc.createElement('IconStyle')
         styleElement.appendChild(iconStyleElement)
         colorElement = kmlDoc.createElement('color')
-        colorElement.appendChild(kmlDoc.createTextNode('ffffaa00'))
+        colorElement.appendChild(kmlDoc.createTextNode(gender_color))
         iconStyleElement.appendChild(colorElement)
         scaleElement = kmlDoc.createElement('scale')
         scaleElement.appendChild(kmlDoc.createTextNode('1.2'))
@@ -319,18 +321,18 @@ class EntryEdit(QAbstractItemView):
         iconElement = kmlDoc.createElement('Icon')
         iconStyleElement.appendChild(iconElement)
         hrefElement = kmlDoc.createElement('href')
-        hrefElement.appendChild(kmlDoc.createTextNode('http://maps.google.com/mapfiles/kml/shapes/woman.png'))
+        hrefElement.appendChild(kmlDoc.createTextNode('http://maps.google.com/mapfiles/kml/shapes/'+ gender +'.png'))
         iconElement.appendChild(hrefElement)
         listStyleElement = kmlDoc.createElement('ListStyle')
         styleElement.appendChild(listStyleElement)
 
         styleElement = kmlDoc.createElement('Style')
-        styleElement.setAttribute('id', 'sh_woman')
+        styleElement.setAttribute('id', 'sh_' + gender)
         documentElement.appendChild(styleElement)
         iconStyleElement = kmlDoc.createElement('IconStyle')
         styleElement.appendChild(iconStyleElement)
         colorElement = kmlDoc.createElement('color')
-        colorElement.appendChild(kmlDoc.createTextNode('ffffaa00'))
+        colorElement.appendChild(kmlDoc.createTextNode(gender_color))
         iconStyleElement.appendChild(colorElement)
         scaleElement = kmlDoc.createElement('scale')
         scaleElement.appendChild(kmlDoc.createTextNode('1.4'))
@@ -338,13 +340,13 @@ class EntryEdit(QAbstractItemView):
         iconElement = kmlDoc.createElement('Icon')
         iconStyleElement.appendChild(iconElement)
         hrefElement = kmlDoc.createElement('href')
-        hrefElement.appendChild(kmlDoc.createTextNode('http://maps.google.com/mapfiles/kml/shapes/woman.png'))
+        hrefElement.appendChild(kmlDoc.createTextNode('http://maps.google.com/mapfiles/kml/shapes/'+ gender +'.png'))
         iconElement.appendChild(hrefElement)
         listStyleElement = kmlDoc.createElement('ListStyle')
         styleElement.appendChild(listStyleElement)
 
         styleMapElement = kmlDoc.createElement('StyleMap')
-        styleMapElement.setAttribute('id', 'msn_woman')
+        styleMapElement.setAttribute('id', 'msn_'+ gender )
         documentElement.appendChild(styleMapElement)
         pairElement = kmlDoc.createElement('Pair')
         styleMapElement.appendChild(pairElement)
@@ -352,7 +354,7 @@ class EntryEdit(QAbstractItemView):
         keyElement.appendChild(kmlDoc.createTextNode('normal'))
         pairElement.appendChild(keyElement)
         styleUrlElement = kmlDoc.createElement('styleUrl')
-        styleUrlElement.appendChild(kmlDoc.createTextNode('#sn_woman'))
+        styleUrlElement.appendChild(kmlDoc.createTextNode('#sn_'+ gender ))
         pairElement.appendChild(styleUrlElement)
         pairElement = kmlDoc.createElement('Pair')
         styleMapElement.appendChild(pairElement)
@@ -360,7 +362,7 @@ class EntryEdit(QAbstractItemView):
         keyElement.appendChild(kmlDoc.createTextNode('highlight'))
         pairElement.appendChild(keyElement)
         styleUrlElement = kmlDoc.createElement('styleUrl')
-        styleUrlElement.appendChild(kmlDoc.createTextNode('#sh_woman'))
+        styleUrlElement.appendChild(kmlDoc.createTextNode('#sh_'+ gender ))
         pairElement.appendChild(styleUrlElement)
 
         placemarkElement = kmlDoc.createElement('Placemark')
@@ -400,7 +402,7 @@ class EntryEdit(QAbstractItemView):
         lookAtElement.appendChild(gxaltitudeModeElement)
 
         styleUrlElement = kmlDoc.createElement('styleUrl')
-        styleUrlElement.appendChild(kmlDoc.createTextNode('#msn_woman'))
+        styleUrlElement.appendChild(kmlDoc.createTextNode('#msn_'+ gender))
         placemarkElement.appendChild(styleUrlElement)
 
         pointElement = kmlDoc.createElement('Point')

@@ -1,36 +1,32 @@
 
+* fields to collect on form:
+ - first_name and last_name
+ - education
+ - position
+ - bio
+ - website
+ - email (s)
+ - phone
+ - address (compute longitude and latitude)
+ - picture (find file)
+ - gender (drop-down)
+ - academic field (drop-down)
+ - don't forget...save validation on fields
+
 
 * collect proper fields in SQLLITE db
  - retrieve GPS coords
  - properly manage image files
  - rich text for description?  or multiple fields is probably better
-* don't forget...save validation on fields
 
 * try bundling up to execute on a Windows machine, or another mac
 
-* fields:
-- first_name
-- last_name
-- Education (free text, show example)
-- Position (free text, show example)
-- Bio: (free text)
-- Website:
-- Email: (can have multiples)
-- Phone: (can have multiples, Cell, Home, etc.)
-- Location: (Redmond, WA)
-- Mailing Address:
-- Geo location -- picker from map?
-- image of picture (save into images folder)
--
-- drop-down for gender
-- drop-down for academic field type  (generate color on KML export)
 
 * sort list
 * filter list...and save only selected to KML
 
 * menus:
 - settings -- choose images folder
-- export to KML
 - export to excel?
 - backup database feature
 
