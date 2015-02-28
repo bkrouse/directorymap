@@ -248,18 +248,6 @@ class EntryEdit(QAbstractItemView):
 
         #TODO: maybe need a pending processing indicator?
 
-
-        kmlFileName = 'Persons Name.kml'
-        nameAndPosition = 'Persons Name - Fellow, Researcher'
-        descriptionText = "Bunch of <b>description text</b>"
-        coordsStr = '-122.1226561806599,47.67504299735445,0'
-        longitude = '-122.1222145437816'
-        latitude = '47.67511545561167'
-        altitude = '0'
-        heading = '0.0005234466212885948'
-        tilt = '0'
-        range = '247.266752558574'
-
         # This constructs the KML document from the CSV file.
         kmlDoc = xml.dom.minidom.Document()
 
@@ -269,8 +257,50 @@ class EntryEdit(QAbstractItemView):
         kmlElement.setAttribute('xmlns:kml', 'http://www.opengis.net/kml/2.2')
         kmlElement.setAttribute('xmlns:atom', 'http://www.w3.org/2005/Atom')
         kmlElement = kmlDoc.appendChild(kmlElement)
+
+        kmlFolder = kmlDoc.createElement("Folder")
+        kmlFolder = kmlElement.appendChild(kmlFolder)
+        nameElement = kmlDoc.createElement('name')
+        nameElement.appendChild(kmlDoc.createTextNode('My Places'))
+        kmlFolder.appendChild(nameElement)
+        openElement = kmlDoc.createElement('open')
+        openElement.appendChild(kmlDoc.createTextNode('1'))
+        kmlFolder.appendChild(openElement)
+
+
+        for i in range(0, self.model().rowCount()):
+            self.createKMLEntry(kmlDoc, kmlFolder, self.model().record(i))
+
+
+        kmlFile = open(fileName, 'wb')
+        kmlFile.write(kmlDoc.toprettyxml(encoding="UTF-8"))
+
+
+
+        msgBox = QMessageBox()
+        msgBox.setText("Created KML successfully.")
+        msgBox.exec()
+
+
+    def createKMLEntry(self, kmlDoc, kmlFolder, record):
+
+        personName = record.field("first_name").value() + " " + record.field("last_name").value()
+
+        kmlFileName = personName + '.kml'
+        nameAndPosition = personName + ' - Fellow, Researcher'
+        descriptionText = "Bunch of <b>description text</b>"
+        coordsStr = '-122.1226561806599,47.67504299735445,0'
+        longitude = '-122.1222145437816'
+        latitude = '47.67511545561167'
+        altitude = '0'
+        heading = '0.0005234466212885948'
+        tilt = '0'
+        xrange = '247.266752558574'
+
+
         documentElement = kmlDoc.createElement('Document')
-        documentElement = kmlElement.appendChild(documentElement)
+        documentElement = kmlFolder.appendChild(documentElement)
+
         nameElement = kmlDoc.createElement('name')
         nameElement.appendChild(kmlDoc.createTextNode(kmlFileName))
         documentElement.appendChild(nameElement)
@@ -360,7 +390,7 @@ class EntryEdit(QAbstractItemView):
         tiltElement.appendChild(kmlDoc.createTextNode(tilt))
         lookAtElement.appendChild(tiltElement)
         rangeElement = kmlDoc.createElement('range')
-        rangeElement.appendChild(kmlDoc.createTextNode(range))
+        rangeElement.appendChild(kmlDoc.createTextNode(xrange))
         lookAtElement.appendChild(rangeElement)
         altitudeModeElement = kmlDoc.createElement('altitudeMode')
         altitudeModeElement.appendChild(kmlDoc.createTextNode('relativeToGround'))
@@ -385,18 +415,6 @@ class EntryEdit(QAbstractItemView):
         coordinatesElement.appendChild(kmlDoc.createTextNode(coordsStr))
         pointElement.appendChild(coordinatesElement)
 
-        #for row in csvReader:
-        #placemarkElement = createPlacemark(kmlDoc, row, order)
-        #documentElement.appendChild(placemarkElement)
-
-        kmlFile = open(fileName, 'wb')
-        kmlFile.write(kmlDoc.toprettyxml(encoding="UTF-8"))
-
-
-
-        msgBox = QMessageBox()
-        msgBox.setText("Created KML successfully.")
-        msgBox.exec()
 
 
 

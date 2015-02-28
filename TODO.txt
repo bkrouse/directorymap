@@ -1,6 +1,4 @@
 
-* create multiple KMLs
-  - zip into KMZ or something?
 
 * collect proper fields in SQLLITE db
  - retrieve GPS coords
